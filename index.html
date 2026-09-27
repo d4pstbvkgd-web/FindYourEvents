@@ -146,7 +146,7 @@
       <div class="suggest">
         <span>Know an event that should be here?</span>
         <a class="btn" id="suggestForm" href="#" target="_blank" rel="noopener">Suggest an event</a>
-        <button class="btn ghost" id="icsAll" type="button">Add all dates to my calendar</button>
+        <button class="btn ghost" id="icsAll" type="button">Add my ★ saved events to calendar</button>
         <form class="signup" id="signup" novalidate>
           <label for="suEmail" class="sulbl">Get the weekly list by email</label>
           <div class="surow"><input id="suEmail" name="email" type="email" required placeholder="you@example.com" autocomplete="email"><button class="btn" type="submit">Subscribe</button></div>
@@ -369,6 +369,7 @@ function renderList(){
   if(hl){const el=document.getElementById("ev-"+hl);if(el)el.scrollIntoView({block:"center"});}
 }
 function render(){renderRail("sectors","sector");renderList();renderCal();
+  {const n=live().filter(e=>favs.has(e.id)).length;document.getElementById("icsAll").textContent=n?`Add my ${n} ★ saved event${n===1?"":"s"} to calendar`:"Add my ★ saved events to calendar";}
   document.querySelector("main.wrap").classList.toggle("calview",view==="cal");
   document.getElementById("list").hidden=view!=="list";document.getElementById("cal").hidden=view!=="cal";
   document.getElementById("vList").setAttribute("aria-pressed",view==="list");document.getElementById("vCal").setAttribute("aria-pressed",view==="cal");}
@@ -440,13 +441,15 @@ document.getElementById("list").addEventListener("click",ev=>{
   if(b.dataset.share){const u=new URL(location.href);u.hash="event="+b.dataset.share;copy(u.toString());}
 });
 document.getElementById("icsAll").onclick=()=>{
-  const evs=filtered().filter(e=>e._d);
-  if(!evs.length){toast("No dated events in this view");return;}
+  const saved=live().filter(e=>favs.has(e.id)).map(e=>({...e,_d:effectiveDate(e)}));
+  const evs=saved.filter(e=>e._d);
+  if(!saved.length){toast("Tap ★ on the events you want first, then add them here");return;}
+  if(!evs.length){toast("Your saved events don't have confirmed dates yet");return;}
   const txt=v=>String(v).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\n/g,"\\n");
   const body=evs.map(e=>{const s0=e._d.replace(/-/g,"");const endD=parse(e.end&&!e.rule?e.end:e._d);endD.setDate(endD.getDate()+1);
     return ["BEGIN:VEVENT",`UID:${e.id}-${s0}@melbourne-sector-events`,`DTSTAMP:${s0}T000000Z`,`DTSTART;VALUE=DATE:${s0}`,`DTEND;VALUE=DATE:${iso(endD).replace(/-/g,"")}`,`SUMMARY:${txt(e.name)}`,`LOCATION:${txt(e.venue)}`,`DESCRIPTION:${txt(e.time+" — "+e.desc+" Register: "+e.url)}`,`URL:${e.url}`,"END:VEVENT"].join("\r\n");}).join("\r\n");
   const ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Melbourne Sector Events//EN","X-WR-CALNAME:Melbourne Sector Events",body,"END:VCALENDAR"].join("\r\n");
-  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([ics],{type:"text/calendar"}));a.download="melbourne-sector-events.ics";a.click();toast(`${evs.length} events exported`);
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([ics],{type:"text/calendar"}));a.download="my-saved-melbourne-events.ics";a.click();toast(`${evs.length} saved event${evs.length===1?"":"s"} added`+(saved.length>evs.length?` (${saved.length-evs.length} without a date skipped)`:""));
 };
 document.getElementById("copyView").onclick=()=>copy(viewUrl());
 document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value;render();});
