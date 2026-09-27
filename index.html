@@ -36,6 +36,11 @@
   .btn{display:inline-block;background:var(--signal);color:var(--ink);border:0;border-radius:6px;padding:9px 14px;font-weight:600;text-decoration:none;font-size:14px}
   .btn.ghost{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.6)}
   @media (max-width:820px){.suggest{max-width:none;flex-direction:row;align-items:center;flex-wrap:wrap}}
+  .signup{width:100%;border-top:1px solid rgba(255,255,255,.25);padding-top:10px;margin-top:2px;display:flex;flex-direction:column;gap:6px}
+  .sulbl{font-family:var(--display);font-weight:700;font-size:15px;color:#fff}
+  .surow{display:flex;gap:6px;width:100%}
+  .surow input{flex:1;min-width:0;padding:9px 10px;border:0;border-radius:6px;font:inherit;font-size:14px;background:#fff;color:var(--ink)}
+  .sunote{font-size:12px;color:#B9CFC4} .sunote.err{color:var(--signal);font-weight:600}
 
   .linkbtn{background:none;border:0;color:#fff;text-decoration:underline;padding:0;font-size:13px}
   .log{margin-top:8px;font-size:13px;color:#D9E6DE;max-width:70ch} .log div{margin:2px 0} .log b{color:#fff}
@@ -141,8 +146,12 @@
       <div class="suggest">
         <span>Know an event that should be here?</span>
         <a class="btn" id="suggestForm" href="#" target="_blank" rel="noopener">Suggest an event</a>
-        <a class="btn ghost" id="weeklyList" href="#">Get the weekly email</a>
         <button class="btn ghost" id="icsAll" type="button">Add all dates to my calendar</button>
+        <form class="signup" id="signup" novalidate>
+          <label for="suEmail" class="sulbl">Get the weekly list by email</label>
+          <div class="surow"><input id="suEmail" name="email" type="email" required placeholder="you@example.com" autocomplete="email"><button class="btn" type="submit">Subscribe</button></div>
+          <small class="sunote" id="suNote" role="status">One email a week. Unsubscribe anytime.</small>
+        </form>
       </div>
     </div>
     <button class="filtertoggle" id="filterToggle" aria-expanded="false">Filters</button>
@@ -193,6 +202,11 @@ const LAST_CHECKED = "2026-09-15";
 const FIRST_PUBLISHED = "2026-09-06";   // "New" badges only appear on events added after this date
 const INTRO = "Hi, I'm Naz. I work in life sciences in Melbourne, and I built this list for entrepreneurs, investors and startup people who want to pick the events they'll actually get the most out of. It covers networking nights, workshops, masterclasses and public webinars across Melbourne's sectors — only events where you get to meet people, sorted by sector, with a note on who turns up. It's independent, hand-curated and not affiliated with any organiser. If it saves you a few searches, tell me what's missing.";
 const CONTACT_EMAIL = "eventfinder.melbourne@gmail.com";
+// Weekly-email sign-up. Paste your newsletter tool's sign-up form URL here to connect the box
+// (e.g. Buttondown: "https://buttondown.com/api/emails/embed-subscribe/YOURNAME").
+// While empty, the box opens a pre-filled email to CONTACT_EMAIL instead.
+const NEWSLETTER_ACTION = "";
+const NEWSLETTER_FIELD = "email";
 const CHANGELOG = [
   {date: "2026-09-15", note: "Added 5 (Melbourne Community Dinner; Cremorne Connect: Pickleball to Software — how to create a market then sell into it; AI Engineering Summit — Melbourne; AI Founder Coworking Day × StartSpace; BrainTech 2026). Updated 30, including dates for Startmate Demo Day (20 Oct, Timber Yard), Women in STEM (17 Sep), Mentor Walks (9 Oct), Startup Valley (9 Oct), Ascent Valley (25 Sep) and Business Decision Makers (9 Oct), and prices for BDO Connect, Boroondara Super Networking (free), Startmate First Believers and Demo Day. Removed 13: The AI Summit Australia (ran 7–9 Sep); Transition Risk Masterclass Intensive (ran 8 Sep); AmCham Australia–US Business Forum (ran 9 Sep); Climate Fresk Melbourne — September (September edition ran 5 Sep in Eltham, no next date listed); Melbourne HR Technology Summit 2026 (page shows it ran 27 May 2026); Creative Industries Networking Night 2026: The Art of Business (ran 18 June 2026); Melbourne Connect Innovation Week 2026 (ran 7–11 Sep); Community Coworking Day @ Stone & Chalk (page marked past event, no next date); Stone & Chalk × MLAI fortnightly Saturday co-working (series ended Feb 2026); VCC Masterclass: Taking Victorian Cleantech Global (2026 program started 8 July, EOIs closed 1 July); MedTech Actuator Venture Bootcamp (page is the sold-out Dec 2024 edition, no 2026 date); AI Tech & Startup Night — Melbourne (same night and venue as the Astra Tech Hub event, merged into that entry); My Business lunchtime webinars (Oct–Nov sessions are now member-only; the one public series is for NSW businesses)."},
   {date:"2026-09-06", note:"First public version: 48 listings across 12 sectors, including public webinars and a Life Sciences & MedTech section. Weekly updates from here."}
@@ -451,7 +465,21 @@ function clearAll(){Object.assign(state,{sector:null,region:null,win:"all",acces
 (()=>{
   document.getElementById("intro").textContent=INTRO;
   document.getElementById("log").innerHTML=CHANGELOG.map(c=>`<div><b>${fmtChecked(c.date)}</b> — ${esc(c.note)}</div>`).join("");
-  document.getElementById("weeklyList").href="mailto:"+CONTACT_EMAIL+"?subject="+encodeURIComponent("Send me the weekly list")+"&body="+encodeURIComponent("Please add me to the weekly Melbourne networking events list.\n\nMy sector(s): \nMy suburb/area: \n");
+  document.getElementById("signup").addEventListener("submit",ev=>{
+    ev.preventDefault();
+    const inp=document.getElementById("suEmail"), note=document.getElementById("suNote"), v=inp.value.trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){note.textContent="Please enter a valid email address.";note.classList.add("err");inp.focus();return;}
+    note.classList.remove("err");
+    if(NEWSLETTER_ACTION){
+      const f=document.createElement("form");f.method="post";f.action=NEWSLETTER_ACTION;f.target="_blank";
+      const i=document.createElement("input");i.type="hidden";i.name=NEWSLETTER_FIELD;i.value=v;f.appendChild(i);
+      document.body.appendChild(f);f.submit();f.remove();
+      inp.value="";note.textContent="Thanks! Check your inbox to confirm your subscription.";
+    }else{
+      location.href="mailto:"+CONTACT_EMAIL+"?subject="+encodeURIComponent("Send me the weekly list")+"&body="+encodeURIComponent("Please add "+v+" to the weekly Melbourne networking events list.\n\nMy sector(s): \nMy suburb/area: \n");
+      note.textContent="Your email app should open. Press Send to finish.";
+    }
+  });
   document.getElementById("lastChecked").textContent="Last full check: "+fmtChecked(LAST_CHECKED)+" "+parse(LAST_CHECKED).getFullYear()+".";
   const f=document.getElementById("suggestForm"); if(SUGGEST_FORM_URL&&!/forms\.example/.test(SUGGEST_FORM_URL))f.href=SUGGEST_FORM_URL;else f.style.display="none";
   const h=location.hash; const gs=h.match(/sector=([^&]+)/),ga=h.match(/area=([^&]+)/);
