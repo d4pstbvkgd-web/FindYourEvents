@@ -3,22 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Melbourne Sector Events — networking events sorted by sector</title>
+<title>Find Your Events — Melbourne networking events sorted by sector</title>
 <meta name="description" content="Hand-picked Melbourne networking nights, workshops, masterclasses and webinars for founders, investors and professionals, sorted by sector, with a note on who you'll meet. Updated every Monday.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="canonical" href="https://d4pstbvkgd-web.github.io/FindYourEvents/">
 <meta name="theme-color" content="#1E5A45">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://d4pstbvkgd-web.github.io/FindYourEvents/">
-<meta property="og:title" content="Melbourne Sector Events — networking events sorted by sector">
+<meta property="og:title" content="Find Your Events — Melbourne networking events sorted by sector">
 <meta property="og:description" content="Hand-picked networking nights, workshops and webinars for founders, investors and professionals, with a note on who you'll meet. Updated every Monday.">
 <meta property="og:image" content="https://d4pstbvkgd-web.github.io/FindYourEvents/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:site_name" content="Melbourne Sector Events">
+<meta property="og:site_name" content="Find Your Events">
 <meta property="og:locale" content="en_AU">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Melbourne Sector Events — networking events sorted by sector">
+<meta name="twitter:title" content="Find Your Events — Melbourne networking events sorted by sector">
 <meta name="twitter:description" content="Hand-picked Melbourne networking events, sorted by sector, with a note on who you'll meet. Updated every Monday.">
 <meta name="twitter:image" content="https://d4pstbvkgd-web.github.io/FindYourEvents/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -205,9 +205,9 @@
 <body>
 <header>
   <div class="wrap">
-    <a class="brand" href="./" aria-label="Melbourne Sector Events home">
+    <a class="brand" href="./" aria-label="Find Your Events home">
       <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#F4C542"/><path d="M9 21L16 10L23 21Z" fill="none" stroke="#143D2F" stroke-width="2.2" stroke-linejoin="round"/><circle cx="16" cy="10" r="3.6" fill="#1E5A45"/><circle cx="9" cy="21" r="3.6" fill="#1E5A45"/><circle cx="23" cy="21" r="3.6" fill="#1E5A45"/></svg>
-      <span>Melbourne Sector Events</span>
+      <span>Find Your Events</span>
     </a>
     <div class="titlerow">
       <div class="lead">
@@ -298,7 +298,7 @@
 const SUGGEST_FORM_URL = "https://forms.gle/GpZarT28rLhoYpEB7";
 const LAST_CHECKED = "2026-09-28";
 const FIRST_PUBLISHED = "2026-09-06";   // "New" badges only appear on events added after this date
-const INTRO = "Curated by Naz, who works in life sciences in Melbourne. Independent and not affiliated with any organiser — tell me what's missing.";
+const INTRO = "Curated by Naz. Independent and not affiliated with any organiser.";
 const CONTACT_EMAIL = "eventfinder.melbourne@gmail.com";
 // Weekly-email sign-up. Paste your newsletter tool's sign-up form URL here to connect the box
 // (e.g. Buttondown: "https://buttondown.com/api/emails/embed-subscribe/YOURNAME").
@@ -559,7 +559,7 @@ function viewUrl(){const u=new URL(location.href);const p=[];if(state.sector)p.p
 const icsTxt=v=>String(v).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\n/g,"\\n");
 function vevent(e){const d=effectiveDate(e),s0=d.replace(/-/g,""),endD=parse(e.end&&!e.rule?e.end:d);endD.setDate(endD.getDate()+1);
   return ["BEGIN:VEVENT",`UID:${e.id}-${s0}@melbourne-sector-events`,`DTSTAMP:${s0}T000000Z`,`DTSTART;VALUE=DATE:${s0}`,`DTEND;VALUE=DATE:${iso(endD).replace(/-/g,"")}`,`SUMMARY:${icsTxt(e.name)}`,`LOCATION:${icsTxt(e.venue)}`,`DESCRIPTION:${icsTxt(e.time+" — "+e.desc+" Register: "+e.url)}`,`URL:${e.url}`,"END:VEVENT"].join("\r\n");}
-function downloadIcs(evs,name){const ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Melbourne Sector Events//EN","X-WR-CALNAME:Melbourne Sector Events",...evs.map(vevent),"END:VCALENDAR"].join("\r\n");
+function downloadIcs(evs,name){const ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Find Your Events//EN","X-WR-CALNAME:Find Your Events",...evs.map(vevent),"END:VCALENDAR"].join("\r\n");
   const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([ics],{type:"text/calendar"}));a.download=name;document.body.appendChild(a);a.click();a.remove();}
 document.addEventListener("click",ev=>{
   const b=ev.target.closest("button");if(!b)return;
