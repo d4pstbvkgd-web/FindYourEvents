@@ -45,11 +45,13 @@
   .byline{margin:10px 0 0;font-size:14px;color:var(--mist);font-style:italic}
   .about{margin:6px 0 0;font-size:14px;color:var(--mist)} .about b{color:#fff;font-weight:600}
   .linkbtn{background:none;border:0;color:inherit;text-decoration:underline;padding:0;font-size:inherit}
-  .log{margin-top:8px;font-size:14px;color:var(--mist);max-width:72ch} .log div{margin:4px 0} .log b{color:#fff}
 
   .about a{color:#fff}
   .cta{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:6px;padding-top:6px}
+  .ctarow{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
   .ctabtn{font-size:16px;padding:12px 20px}
+  .ctabtn.ghost{background:transparent;color:#fff;box-shadow:inset 0 0 0 2px rgba(255,255,255,.7)}
+  .ctabtn.ghost:hover{box-shadow:inset 0 0 0 2px #fff;background:rgba(255,255,255,.08)}
   .cta small{font-size:13px;color:var(--mist)}
   .signup{display:flex;flex-direction:column;gap:8px}
   .sulbl{font-family:var(--display);font-weight:700;font-size:17px;color:#fff;line-height:1.2}
@@ -82,7 +84,8 @@
     header{padding:14px 16px 18px}
     .brand{margin-bottom:14px;font-size:20px;gap:12px} .brand svg{width:46px;height:46px}
     .titlerow{display:block}
-    .cta{flex-direction:row;align-items:center;gap:10px;margin-top:14px;padding:0}
+    .cta{align-items:flex-start;gap:6px;margin-top:14px;padding:0}
+    .ctarow{justify-content:flex-start;gap:8px} .ctabtn{font-size:15px;padding:11px 14px}
     .sub{font-size:16px}
     .filtertoggle{display:inline-block}
     .filters{display:none} .filters.open{display:block}
@@ -222,10 +225,9 @@
         <h1>Melbourne networking events, sorted by sector</h1>
         <p class="sub">Hand-picked networking nights, workshops and webinars for founders, investors and professionals, with a note on who you'll meet at each one. Updated every Monday.</p>
         <p class="byline" id="intro"></p>
-        <p class="about"><b id="lastChecked"></b> · <button class="linkbtn" id="showLog" aria-expanded="false">What changed</button> · <a class="suggestLink" href="#" target="_blank" rel="noopener">Suggest an event</a></p>
-        <div class="log" id="log" hidden></div>
+        <p class="about"><b id="lastChecked"></b></p>
       </div>
-      <div class="cta"><a class="btn ctabtn" id="goSubscribe" href="#subscribe">✉ Get the weekly email</a><small>Pick your sectors · free</small></div>
+      <div class="cta"><div class="ctarow"><a class="btn ctabtn" id="goSubscribe" href="#subscribe">✉ Get the weekly email</a><a class="btn ctabtn ghost suggestLink" href="#" target="_blank" rel="noopener">＋ Suggest an event</a></div><small>Weekly email: pick your sectors, free</small></div>
     </div>
     <button class="filtertoggle" id="filterToggle" aria-expanded="false" aria-controls="filters">Filters</button>
     <div class="filters" id="filters">
@@ -592,7 +594,6 @@ document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value
 document.getElementById("fSector").onchange=e=>{state.sector=e.target.value||null;render();};
 document.getElementById("clearF").onclick=clearAll;
 document.getElementById("filterToggle").onclick=e=>{const f=document.getElementById("filters");f.classList.toggle("open");e.currentTarget.setAttribute("aria-expanded",f.classList.contains("open"));};
-document.getElementById("showLog").onclick=e=>{const l=document.getElementById("log");l.hidden=!l.hidden;e.currentTarget.setAttribute("aria-expanded",!l.hidden);};
 function clearAll(){Object.assign(state,{sector:null,region:"",type:"",slot:"",goal:"",win:"all",format:"",free:false,open:false,fav:false,q:""});
   document.getElementById("q").value="";["fGoal","fType","fSector","fSlot"].forEach(i=>document.getElementById(i).value="");render();}
 
@@ -636,7 +637,6 @@ document.querySelectorAll("form.signup").forEach(form=>form.addEventListener("su
 
 (()=>{
   document.getElementById("intro").textContent=INTRO;
-  document.getElementById("log").innerHTML=CHANGELOG.map(c=>`<div><b>${fmtChecked(c.date)}</b> — ${esc(c.note)}</div>`).join("");
   document.getElementById("lastChecked").textContent="Last full check: "+fmtChecked(LAST_CHECKED)+" "+parse(LAST_CHECKED).getFullYear();
   const cl=document.getElementById("contactLink");cl.href="mailto:"+CONTACT_EMAIL;cl.textContent=CONTACT_EMAIL;
   document.querySelectorAll(".suggestLink").forEach(a=>{if(SUGGEST_FORM_URL)a.href=SUGGEST_FORM_URL;else a.hidden=true;});
