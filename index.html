@@ -40,7 +40,7 @@
   .brand svg{width:56px;height:56px;flex:none}
   .titlerow{display:flex;justify-content:space-between;align-items:flex-start;gap:32px}
   .lead{max-width:760px}
-  header h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,4.6vw,50px);line-height:1.02;letter-spacing:-.02em;margin:0 0 12px}
+  header h1{text-wrap:balance;font-family:var(--display);font-weight:800;font-size:clamp(30px,4.6vw,50px);line-height:1.02;letter-spacing:-.02em;margin:0 0 12px}
   .sub{margin:0;font-size:17px;color:#fff;max-width:58ch}
   .byline{margin:10px 0 0;font-size:14px;color:var(--mist);font-style:italic}
   .about{margin:6px 0 0;font-size:14px;color:var(--mist)} .about b{color:#fff;font-weight:600}
@@ -221,8 +221,8 @@
     </a>
     <div class="titlerow">
       <div class="lead">
-        <h1>Melbourne networking events, sorted by sector</h1>
-        <p class="sub">Hand-picked networking nights, workshops and webinars for founders, investors and professionals, with a note on who you'll meet at each one. Updated every Monday.</p>
+        <h1>Find the right room to be&nbsp;in.</h1>
+        <p class="sub">Melbourne networking events for founders, investors and professionals, sorted by sector, with who you'll meet at each one.</p>
         <p class="byline" id="intro"></p>
         <p class="about"><b id="lastChecked"></b></p>
       </div>
@@ -301,7 +301,7 @@
 const SUGGEST_FORM_URL = "https://forms.gle/GpZarT28rLhoYpEB7";
 const LAST_CHECKED = "2026-09-28";
 const FIRST_PUBLISHED = "2026-09-06";   // "New" badges only appear on events added after this date
-const INTRO = "Curated by Naz. Independent and not affiliated with any organiser.";
+const INTRO = "Updated every Monday · Curated by Naz";
 const CONTACT_EMAIL = "eventfinder.melbourne@gmail.com";
 // Weekly-email sign-up. Paste your newsletter tool's sign-up form URL here to connect the box
 // (e.g. Buttondown: "https://buttondown.com/api/emails/embed-subscribe/YOURNAME").
