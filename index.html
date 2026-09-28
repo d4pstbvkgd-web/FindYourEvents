@@ -53,6 +53,13 @@
   .surow{display:flex;gap:6px;width:100%}
   .surow input{flex:1;min-width:0;padding:10px 12px;border:0;border-radius:6px;font:inherit;font-size:15px;background:#fff;color:var(--ink)}
   .btn{display:inline-block;background:var(--signal);color:var(--ink);border:0;border-radius:6px;padding:10px 16px;font-weight:600;text-decoration:none;font-size:15px;white-space:nowrap}
+  .susec{border:0;margin:2px 0 0;padding:0;min-width:0}
+  .susec legend{padding:0;margin:0 0 6px;font-size:13px;font-weight:600;color:var(--mist)}
+  .suchips{display:flex;flex-wrap:wrap;gap:5px}
+  .suchip{border:1.5px solid rgba(255,255,255,.5);background:transparent;color:#fff;border-radius:999px;padding:4px 10px;font-size:13px;font-weight:500;line-height:1.3}
+  .suchip:hover{border-color:#fff}
+  .suchip[aria-pressed=true]{background:#fff;border-color:#fff;color:var(--ink);font-weight:600}
+  .suchip[aria-pressed=true]::before{content:"✓ "}
   .sunote{font-size:13px;color:var(--mist);line-height:1.4} .sunote.err{color:var(--signal);font-weight:600}
   .suggestline{margin:14px 0 0;padding-top:12px;border-top:1px solid rgba(255,255,255,.2);font-size:14px;color:var(--mist)}
   .suggestline a{color:#fff;font-weight:600}
@@ -221,6 +228,7 @@
         <form class="signup" novalidate>
           <label for="suEmail1" class="sulbl">Get the list every Monday</label>
           <div class="surow"><input id="suEmail1" name="email" type="email" required placeholder="you@example.com" autocomplete="email"><button class="btn" type="submit">Subscribe</button></div>
+          <fieldset class="susec" hidden><legend>Which sectors? Pick any</legend><div class="suchips"></div></fieldset>
           <small class="sunote" role="status">One email a week, used only for this list. Unsubscribe anytime.</small>
         </form>
         <p class="suggestline">Know an event that should be here? <a class="suggestLink" href="#" target="_blank" rel="noopener">Suggest an event →</a></p>
@@ -274,10 +282,11 @@
       <div class="calday" id="calDay"></div>
     </div>
     <section class="signup-bottom" aria-label="Weekly email">
-      <div><h2>Get this list every Monday</h2><p>New events and date changes in your inbox once a week.</p></div>
+      <div><h2>Get this list every Monday</h2><p>New events and date changes for the sectors you pick, in your inbox once a week.</p></div>
       <form class="signup" novalidate>
         <label for="suEmail2" class="sulbl">Your email</label>
         <div class="surow"><input id="suEmail2" name="email" type="email" required placeholder="you@example.com" autocomplete="email"><button class="btn" type="submit">Subscribe</button></div>
+        <fieldset class="susec"><legend>Which sectors? Pick any</legend><div class="suchips"></div></fieldset>
         <small class="sunote" role="status">Used only for this list. Unsubscribe anytime.</small>
       </form>
     </section>
@@ -305,6 +314,7 @@ const CONTACT_EMAIL = "eventfinder.melbourne@gmail.com";
 // While empty, the box opens a pre-filled email to CONTACT_EMAIL instead.
 const NEWSLETTER_ACTION = "";
 const NEWSLETTER_FIELD = "email";
+const NEWSLETTER_SECTOR_FIELD = "tag";   // each chosen sector is sent as this field (Buttondown: "tag"; for Mailchimp use your group field name)
 const CHANGELOG = [
   {date: "2026-09-28", note: "Added 10 (AFC Presents: Crowdfunded; Business After Dark — Luna Park; A Guide to Going Global (Cremorne Digital Hub); Startmate Pitch Night — Melbourne; AI for Healthcare Workshop and Networking Dinner; CHICC Expert Workshop: Non-Dilutive Funding; SaMD Regulation by the TGA (webinar); Green Building Forum Melbourne 2026; Melbourne Marketing Forum — October; Melbourne Angels Masterclass #5: Due Diligence). Updated 28, including a confirmed date and venue for the UGC Creator Event (9 Oct, The Osborne Rooftop, South Yarra), Ascent Valley's next pitch night (23 Oct), BDO Connect National Forum now members-only, prices and times for YOW! Melbourne, BrainTech times and prices, Monash Business School events now mostly public, and fresh notes for MedTech Actuator Demo Day, Startmate Demo Day, Stone & Chalk mixers, VCC Cleantech in Business, All-Energy and MBN. Removed 6: Closing the Loop: Connecting Victoria's Circular Economy (ran 16 Sep); Women in STEM — Thriving Through Challenges (ran 17 Sep); Break the idea loop and decide what to build (ran 22 Sep); AI Startup Pitch & Investor Networking — Melbourne (ran 22 Sep, no next Melbourne date); Cremorne Connect: Pickleball to Software (ran 23 Sep, no next Cremorne Connect listed); Startmate First Believers (applications closed 21 Sep, attendance is for accepted applicants only)."},
   {date: "2026-09-15", note: "Added 5 (Melbourne Community Dinner; Cremorne Connect: Pickleball to Software — how to create a market then sell into it; AI Engineering Summit — Melbourne; AI Founder Coworking Day × StartSpace; BrainTech 2026). Updated 30, including dates for Startmate Demo Day (20 Oct, Timber Yard), Women in STEM (17 Sep), Mentor Walks (9 Oct), Startup Valley (9 Oct), Ascent Valley (25 Sep) and Business Decision Makers (9 Oct), and prices for BDO Connect, Boroondara Super Networking (free), Startmate First Believers and Demo Day. Removed 13: The AI Summit Australia (ran 7–9 Sep); Transition Risk Masterclass Intensive (ran 8 Sep); AmCham Australia–US Business Forum (ran 9 Sep); Climate Fresk Melbourne — September (September edition ran 5 Sep in Eltham, no next date listed); Melbourne HR Technology Summit 2026 (page shows it ran 27 May 2026); Creative Industries Networking Night 2026: The Art of Business (ran 18 June 2026); Melbourne Connect Innovation Week 2026 (ran 7–11 Sep); Community Coworking Day @ Stone & Chalk (page marked past event, no next date); Stone & Chalk × MLAI fortnightly Saturday co-working (series ended Feb 2026); VCC Masterclass: Taking Victorian Cleantech Global (2026 program started 8 July, EOIs closed 1 July); MedTech Actuator Venture Bootcamp (page is the sold-out Dec 2024 edition, no 2026 date); AI Tech & Startup Night — Melbourne (same night and venue as the Astra Tech Hub event, merged into that entry); My Business lunchtime webinars (Oct–Nov sessions are now member-only; the one public series is for NSW businesses)."},
@@ -592,6 +602,26 @@ function clearAll(){Object.assign(state,{sector:null,region:"",type:"",slot:"",g
   document.getElementById("q").value="";["fGoal","fType","fSector","fSlot"].forEach(i=>document.getElementById(i).value="");render();}
 
 // weekly-email sign-up (header and bottom forms)
+// sector choice in the sign-up forms
+function buildSectorChips(){
+  const secs=[...new Set(["Startups & Investment","Technology & AI","Business & Professional Services","Life Sciences & MedTech","Sustainability & Climate","STEM & Research","Creative & Media","HR & People",...live().map(e=>e.sector)])].sort();
+  document.querySelectorAll("form.signup").forEach(form=>{
+    const box=form.querySelector(".suchips"); if(!box)return;
+    box.innerHTML=[`<button type="button" class="suchip" data-sus="" aria-pressed="true">All sectors</button>`,...secs.map(k=>`<button type="button" class="suchip" data-sus="${esc(k)}" aria-pressed="false">${esc(k)}</button>`)].join("");
+    box.addEventListener("click",ev=>{const b=ev.target.closest(".suchip");if(!b)return;ev.stopPropagation();form.dataset.touched="1";
+      const all=box.querySelector('[data-sus=""]');
+      if(!b.dataset.sus){box.querySelectorAll(".suchip").forEach(x=>x.setAttribute("aria-pressed",x===b));return;}
+      b.setAttribute("aria-pressed",b.getAttribute("aria-pressed")!=="true");
+      const any=[...box.querySelectorAll(".suchip")].some(x=>x.dataset.sus&&x.getAttribute("aria-pressed")==="true");
+      all.setAttribute("aria-pressed",!any);});
+    const fs=form.querySelector(".susec");
+    form.addEventListener("focusin",()=>{
+      if(fs.hidden){fs.hidden=false;}
+      if(!form.dataset.touched&&state.sector){box.querySelectorAll(".suchip").forEach(x=>x.setAttribute("aria-pressed",x.dataset.sus===state.sector));}
+    });
+  });
+}
+const chosenSectors=form=>[...form.querySelectorAll(".suchip[aria-pressed=true]")].map(x=>x.dataset.sus).filter(Boolean);
 document.querySelectorAll("form.signup").forEach(form=>form.addEventListener("submit",ev=>{
   ev.preventDefault();
   const inp=form.querySelector("input[type=email]"), note=form.querySelector(".sunote"), v=inp.value.trim();
@@ -600,10 +630,11 @@ document.querySelectorAll("form.signup").forEach(form=>form.addEventListener("su
   if(NEWSLETTER_ACTION){
     const f=document.createElement("form");f.method="post";f.action=NEWSLETTER_ACTION;f.target="_blank";
     const i=document.createElement("input");i.type="hidden";i.name=NEWSLETTER_FIELD;i.value=v;f.appendChild(i);
+    (chosenSectors(form).length?chosenSectors(form):["All sectors"]).forEach(k=>{const t=document.createElement("input");t.type="hidden";t.name=NEWSLETTER_SECTOR_FIELD;t.value=k;f.appendChild(t);});
     document.body.appendChild(f);f.submit();f.remove();
     inp.value="";note.textContent="Thanks! Check your inbox to confirm your subscription.";
   }else{
-    location.href="mailto:"+CONTACT_EMAIL+"?subject="+encodeURIComponent("Send me the weekly list")+"&body="+encodeURIComponent("Please add "+v+" to the weekly Melbourne networking events list.\n\nMy sector(s): \nMy suburb/area: \n");
+    location.href="mailto:"+CONTACT_EMAIL+"?subject="+encodeURIComponent("Send me the weekly list")+"&body="+encodeURIComponent("Please add "+v+" to the weekly Melbourne networking events list.\n\nSectors I want: "+(chosenSectors(form).join(", ")||"All sectors")+"\n");
     note.textContent="Your email app should open. Press Send to finish.";
   }
 }));
@@ -614,6 +645,7 @@ document.querySelectorAll("form.signup").forEach(form=>form.addEventListener("su
   document.getElementById("lastChecked").textContent="Last full check: "+fmtChecked(LAST_CHECKED)+" "+parse(LAST_CHECKED).getFullYear();
   const cl=document.getElementById("contactLink");cl.href="mailto:"+CONTACT_EMAIL;cl.textContent=CONTACT_EMAIL;
   document.querySelectorAll(".suggestLink").forEach(a=>{if(SUGGEST_FORM_URL)a.href=SUGGEST_FORM_URL;else a.hidden=true;});
+  buildSectorChips();
   const gs=document.getElementById("fGoal"); GOALS.forEach(([v,l])=>{if(live().some(e=>(e.goals||[]).includes(v)))gs.add(new Option(l,v));});
   const ss=document.getElementById("fSector"); [...new Set(live().map(e=>e.sector))].sort().forEach(k=>ss.add(new Option(k,k)));
   const h=location.hash, gsec=h.match(/sector=([^&]+)/), ga=h.match(/area=([^&]+)/);
