@@ -39,7 +39,7 @@
   .brand{display:inline-flex;align-items:center;gap:14px;text-decoration:none;font-family:var(--display);font-weight:800;font-size:24px;line-height:1.1;letter-spacing:-.01em;color:#fff;margin-bottom:22px}
   .brand svg{width:56px;height:56px;flex:none}
   .titlerow{display:flex;justify-content:space-between;align-items:flex-start;gap:32px}
-  .lead{max-width:640px}
+  .lead{max-width:760px}
   header h1{font-family:var(--display);font-weight:800;font-size:clamp(30px,4.6vw,50px);line-height:1.02;letter-spacing:-.02em;margin:0 0 12px}
   .sub{margin:0;font-size:17px;color:#fff;max-width:58ch}
   .byline{margin:10px 0 0;font-size:14px;color:var(--mist);font-style:italic}
@@ -47,7 +47,10 @@
   .linkbtn{background:none;border:0;color:inherit;text-decoration:underline;padding:0;font-size:inherit}
   .log{margin-top:8px;font-size:14px;color:var(--mist);max-width:72ch} .log div{margin:4px 0} .log b{color:#fff}
 
-  .signbox{flex:0 0 310px;background:rgba(0,0,0,.2);border-radius:10px;padding:16px}
+  .about a{color:#fff}
+  .cta{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:6px;padding-top:6px}
+  .ctabtn{font-size:16px;padding:12px 20px}
+  .cta small{font-size:13px;color:var(--mist)}
   .signup{display:flex;flex-direction:column;gap:8px}
   .sulbl{font-family:var(--display);font-weight:700;font-size:17px;color:#fff;line-height:1.2}
   .surow{display:flex;gap:6px;width:100%}
@@ -61,8 +64,6 @@
   .suchip[aria-pressed=true]{background:#fff;border-color:#fff;color:var(--ink);font-weight:600}
   .suchip[aria-pressed=true]::before{content:"✓ "}
   .sunote{font-size:13px;color:var(--mist);line-height:1.4} .sunote.err{color:var(--signal);font-weight:600}
-  .suggestline{margin:14px 0 0;padding-top:12px;border-top:1px solid rgba(255,255,255,.2);font-size:14px;color:var(--mist)}
-  .suggestline a{color:#fff;font-weight:600}
 
   /* filters */
   .filtertoggle{display:none;margin-top:16px;background:transparent;color:#fff;border:2px solid rgba(255,255,255,.6);border-radius:6px;padding:8px 14px;font-weight:600}
@@ -81,7 +82,7 @@
     header{padding:14px 16px 18px}
     .brand{margin-bottom:14px;font-size:20px;gap:12px} .brand svg{width:46px;height:46px}
     .titlerow{display:block}
-    .signbox{display:none}
+    .cta{flex-direction:row;align-items:center;gap:10px;margin-top:14px;padding:0}
     .sub{font-size:16px}
     .filtertoggle{display:inline-block}
     .filters{display:none} .filters.open{display:block}
@@ -192,7 +193,7 @@
   @media (max-width:600px){.calgrid{grid-auto-rows:minmax(52px,auto);gap:3px}.cell{padding:3px;align-items:center}.cell .top{flex-direction:column;gap:3px}.chipev,.cell .more{display:none}.cell .cnt{font-size:12px;padding:3px 6px}}
 
   /* bottom sign-up */
-  .signup-bottom{margin-top:40px;background:var(--tram);color:#fff;border-radius:12px;padding:22px 22px 20px;display:grid;grid-template-columns:1fr minmax(260px,380px);gap:18px;align-items:center}
+  .signup-bottom{scroll-margin-top:16px;margin-top:40px;background:var(--tram);color:#fff;border-radius:12px;padding:22px 22px 20px;display:grid;grid-template-columns:1fr minmax(260px,380px);gap:18px;align-items:center}
   .signup-bottom h2{font-family:var(--display);font-size:24px;font-weight:800;margin:0 0 4px;line-height:1.1}
   .signup-bottom p{margin:0;color:var(--mist);font-size:15px}
   .signup-bottom .sulbl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
@@ -221,18 +222,10 @@
         <h1>Melbourne networking events, sorted by sector</h1>
         <p class="sub">Hand-picked networking nights, workshops and webinars for founders, investors and professionals, with a note on who you'll meet at each one. Updated every Monday.</p>
         <p class="byline" id="intro"></p>
-        <p class="about"><b id="lastChecked"></b> · <button class="linkbtn" id="showLog" aria-expanded="false">What changed</button></p>
+        <p class="about"><b id="lastChecked"></b> · <button class="linkbtn" id="showLog" aria-expanded="false">What changed</button> · <a class="suggestLink" href="#" target="_blank" rel="noopener">Suggest an event</a></p>
         <div class="log" id="log" hidden></div>
       </div>
-      <aside class="signbox" aria-label="Weekly email">
-        <form class="signup" novalidate>
-          <label for="suEmail1" class="sulbl">Get the list every Monday</label>
-          <div class="surow"><input id="suEmail1" name="email" type="email" required placeholder="you@example.com" autocomplete="email"><button class="btn" type="submit">Subscribe</button></div>
-          <fieldset class="susec" hidden><legend>Which sectors? Pick any</legend><div class="suchips"></div></fieldset>
-          <small class="sunote" role="status">One email a week, used only for this list. Unsubscribe anytime.</small>
-        </form>
-        <p class="suggestline">Know an event that should be here? <a class="suggestLink" href="#" target="_blank" rel="noopener">Suggest an event →</a></p>
-      </aside>
+      <div class="cta"><a class="btn ctabtn" id="goSubscribe" href="#subscribe">✉ Get the weekly email</a><small>Pick your sectors · free</small></div>
     </div>
     <button class="filtertoggle" id="filterToggle" aria-expanded="false" aria-controls="filters">Filters</button>
     <div class="filters" id="filters">
@@ -281,7 +274,7 @@
       <div class="calgrid" id="calGrid"></div>
       <div class="calday" id="calDay"></div>
     </div>
-    <section class="signup-bottom" aria-label="Weekly email">
+    <section class="signup-bottom" id="subscribe" aria-label="Weekly email">
       <div><h2>Get this list every Monday</h2><p>New events and date changes for the sectors you pick, in your inbox once a week.</p></div>
       <form class="signup" novalidate>
         <label for="suEmail2" class="sulbl">Your email</label>
@@ -591,6 +584,8 @@ document.getElementById("vList").onclick=()=>{view="list";render();};
 document.getElementById("vCal").onclick=()=>{view="cal";pickStartMonth();render();};
 document.getElementById("calPrev").onclick=()=>{calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()-1,1);calSel=null;renderCal();};
 document.getElementById("calNext").onclick=()=>{calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()+1,1);calSel=null;renderCal();};
+document.getElementById("goSubscribe").onclick=e=>{e.preventDefault();const sec=document.getElementById("subscribe");
+  sec.scrollIntoView({behavior:"smooth",block:"start"});document.getElementById("suEmail2").focus({preventScroll:true});};
 document.getElementById("copyView").onclick=()=>copy(viewUrl());
 document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value;render();});
 [["fGoal","goal"],["fType","type"],["fSlot","slot"]].forEach(([id,k])=>document.getElementById(id).onchange=e=>{state[k]=e.target.value;render();});
