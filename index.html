@@ -43,6 +43,7 @@
   header h1{text-wrap:balance;font-family:var(--display);font-weight:800;font-size:clamp(30px,4.6vw,50px);line-height:1.02;letter-spacing:-.02em;margin:0 0 12px}
   .sub{margin:0;font-size:17px;color:#fff;max-width:58ch}
   .byline{margin:10px 0 0;font-size:14px;color:var(--mist);font-style:italic}
+  .byline a{color:#fff;font-weight:600;text-underline-offset:2px}
   .about{margin:6px 0 0;font-size:14px;color:var(--mist)} .about b{color:#fff;font-weight:600}
   .linkbtn{background:none;border:0;color:inherit;text-decoration:underline;padding:0;font-size:inherit}
 
@@ -301,7 +302,9 @@
 const SUGGEST_FORM_URL = "https://forms.gle/GpZarT28rLhoYpEB7";
 const LAST_CHECKED = "2026-09-28";
 const FIRST_PUBLISHED = "2026-09-06";   // "New" badges only appear on events added after this date
-const INTRO = "Updated every Monday · Curated by Naz";
+const INTRO = "Updated every Monday · Built and curated by Naz Mohebali";
+const AUTHOR_NAME = "Naz Mohebali";   // this name in INTRO links to AUTHOR_URL
+const AUTHOR_URL = "https://www.linkedin.com/in/nazaninmohebali";
 const CONTACT_EMAIL = "eventfinder.melbourne@gmail.com";
 // Weekly-email sign-up. Paste your newsletter tool's sign-up form URL here to connect the box
 // (e.g. Buttondown: "https://buttondown.com/api/emails/embed-subscribe/YOURNAME").
@@ -635,7 +638,7 @@ document.querySelectorAll("form.signup").forEach(form=>form.addEventListener("su
 }));
 
 (()=>{
-  document.getElementById("intro").textContent=INTRO;
+  document.getElementById("intro").innerHTML=esc(INTRO).replace(esc(AUTHOR_NAME),AUTHOR_URL?`<a href="${esc(AUTHOR_URL)}" target="_blank" rel="noopener">${esc(AUTHOR_NAME)}</a>`:esc(AUTHOR_NAME));
   document.getElementById("lastChecked").textContent="Last full check: "+fmtChecked(LAST_CHECKED)+" "+parse(LAST_CHECKED).getFullYear();
   const cl=document.getElementById("contactLink");cl.href="mailto:"+CONTACT_EMAIL;cl.textContent=CONTACT_EMAIL;
   document.querySelectorAll(".suggestLink").forEach(a=>{if(SUGGEST_FORM_URL)a.href=SUGGEST_FORM_URL;else a.hidden=true;});
