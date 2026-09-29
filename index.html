@@ -41,14 +41,16 @@
   .brand .yr{font-style:normal;color:var(--signal)}
   .titlerow{display:flex;justify-content:space-between;align-items:flex-start;gap:32px}
   .lead{max-width:760px}
+  @media (min-width:821px){.lead{width:fit-content}.lead .sub{contain:inline-size;max-width:none}.lead .meta2{contain:inline-size}}
   header{--hgap:26px}
-  header h1{text-wrap:balance;font-family:var(--display);font-weight:800;font-size:clamp(31px,4vw,48px);line-height:1.08;letter-spacing:-.02em;margin:0 0 var(--hgap)}
+  header h1{text-wrap:balance;font-family:var(--display);font-weight:800;font-size:clamp(31px,4vw,51px);line-height:1.08;letter-spacing:-.02em;margin:0 0 var(--hgap)}
   .sub{margin:0;font-size:19px;line-height:1.5;color:rgba(255,255,255,.92);max-width:34.5em;text-align:justify;hyphens:auto;-webkit-hyphens:auto}
   .byline{display:inline;margin:0;font-size:14px;color:var(--mist)}
   .lead .meta2{margin:18px 0 0;font-size:14px;color:var(--mist);line-height:1.5}
   .byline a{color:#fff;font-weight:600;text-underline-offset:2px;white-space:nowrap}
   .about{display:inline;margin:0;font-size:14px;color:var(--mist)} .about b{color:var(--mist);font-weight:400}
   .about::before{content:" · "}
+  .about{white-space:nowrap}
   .linkbtn{background:none;border:0;color:inherit;text-decoration:underline;padding:0;font-size:inherit}
 
   .about a{color:#fff}
