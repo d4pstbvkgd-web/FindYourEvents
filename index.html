@@ -196,11 +196,19 @@
   @media (max-width:600px){.calgrid{grid-auto-rows:minmax(52px,auto);gap:3px}.cell{padding:3px;align-items:center}.cell .top{flex-direction:column;gap:3px}.chipev,.cell .more{display:none}.cell .cnt{font-size:12px;padding:3px 6px}}
 
   /* bottom sign-up */
-  .signup-bottom{scroll-margin-top:16px;margin-top:40px;background:var(--tram);color:#fff;border-radius:12px;padding:22px 22px 20px;display:grid;grid-template-columns:1fr minmax(260px,380px);gap:18px;align-items:center}
-  .signup-bottom h2{font-family:var(--display);font-size:24px;font-weight:800;margin:0 0 4px;line-height:1.1}
-  .signup-bottom p{margin:0;color:var(--mist);font-size:15px}
+  .signup-bottom{scroll-margin-top:16px;margin-top:36px;background:var(--tram);color:#fff;border-radius:12px;padding:18px 20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,360px);column-gap:24px;row-gap:12px;align-items:center}
+  .signup-bottom .signup{display:contents}
+  .signup-bottom .suhead{grid-column:1;grid-row:1}
+  .signup-bottom .surow{grid-column:2;grid-row:1}
+  .signup-bottom .susec{grid-column:1/-1;grid-row:2;margin:0;padding-top:12px;border-top:1px solid rgba(255,255,255,.18)}
+  .signup-bottom .sunote{grid-column:1/-1;grid-row:3} .signup-bottom .sunote:empty{display:none}
+  .signup-bottom h2{font-family:var(--display);font-size:20px;font-weight:800;margin:0 0 2px;line-height:1.15}
+  .signup-bottom p{margin:0;color:var(--mist);font-size:14px}
   .signup-bottom .sulbl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-  @media (max-width:700px){.signup-bottom{grid-template-columns:1fr}}
+  .signup-bottom .susec legend{float:left;margin:0 10px 0 0;line-height:26px;font-size:13px}
+  .signup-bottom .suchips{gap:6px}
+  .signup-bottom .suchip{padding:3px 10px;font-size:12.5px}
+  @media (max-width:700px){.signup-bottom{grid-template-columns:minmax(0,1fr);padding:16px}.signup-bottom .suhead,.signup-bottom .surow,.signup-bottom .susec,.signup-bottom .sunote{grid-column:1;grid-row:auto}.signup-bottom .susec legend{width:100%;line-height:1.3;margin:0 0 8px}.signup-bottom .suchips{clear:both}}
 
   footer{padding:0 24px 44px;font-size:14px;color:var(--stone);display:grid;grid-template-columns:230px 1fr;column-gap:36px}
   .finner{grid-column:2;min-width:0;border-top:1px solid var(--rule);padding-top:24px}
@@ -283,12 +291,12 @@
       <div class="calday" id="calDay"></div>
     </div>
     <section class="signup-bottom" id="subscribe" aria-label="Weekly email">
-      <div><h2>Get this list every Monday</h2><p>New events and date changes for the sectors you pick, in your inbox once a week.</p></div>
+      <div class="suhead"><h2>Just your sector, every Monday</h2><p>One short email with new events in the sectors you choose.</p></div>
       <form class="signup" novalidate>
         <label for="suEmail2" class="sulbl">Your email</label>
         <div class="surow"><input id="suEmail2" name="email" type="email" required placeholder="you@example.com" autocomplete="email"><button class="btn" type="submit">Subscribe</button></div>
-        <fieldset class="susec"><legend>Which sectors? Pick any</legend><div class="suchips"></div></fieldset>
-        <small class="sunote" role="status">Used only for this list. Unsubscribe anytime.</small>
+        <fieldset class="susec"><legend>Your sectors</legend><div class="suchips"></div></fieldset>
+        <small class="sunote" role="status"></small>
       </form>
     </section>
   </section>
@@ -300,7 +308,7 @@
     <p><b id="whyTitle">Why I built this.</b> Melbourne's networking events are scattered across Eventbrite, Humanitix, Luma and organiser pages, and few say who'll be in the room. So I keep one independent list of events with real networking time, checked on each organiser's page every Monday. <span class="sig">— Naz Mohebali · <a class="authorLink" href="https://www.linkedin.com/in/nazaninmohebali" target="_blank" rel="noopener">Connect on LinkedIn</a></span></p>
   </section>
   <div class="fgrid">
-    <div><h2>Your privacy</h2><p>If you subscribe, your email is used only to send the weekly list, and every email has an unsubscribe link. Events you save with ★ are stored only in your own browser.</p></div>
+    <div><h2>Your privacy</h2><p>If you subscribe, your email is used only for the weekly list, and you can unsubscribe anytime. Events you save with ★ are stored only in your own browser.</p></div>
     <div><h2>Contact</h2><p><a id="contactLink" href="#"></a></p><p><a class="suggestLink" href="#" target="_blank" rel="noopener">Suggest an event →</a></p></div>
   </div>
   </div>
