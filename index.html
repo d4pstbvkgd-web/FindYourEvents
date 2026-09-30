@@ -371,12 +371,12 @@ const INTRO = "Built and curated by Naz Mohebali · Updated every Monday";
 const AUTHOR_NAME = "Naz Mohebali";   // this name in INTRO links to AUTHOR_URL
 const AUTHOR_URL = "https://www.linkedin.com/in/nazaninmohebali";
 const CONTACT_EMAIL = "hello@findyourevents.au";
-// Weekly-email sign-up. Paste your newsletter tool's sign-up form URL here to connect the box
-// (e.g. Buttondown: "https://buttondown.com/api/emails/embed-subscribe/YOURNAME").
-// While empty, the box opens a pre-filled email to CONTACT_EMAIL instead.
-const NEWSLETTER_ACTION = "";
-const NEWSLETTER_FIELD = "email";
-const NEWSLETTER_SECTOR_FIELD = "tag";   // each chosen sector is sent as this field (Buttondown: "tag"; for Mailchimp use your group field name)
+// Weekly-email sign-up, connected to the Kit form "Website sign-up" (form 9982483).
+// Kit sends a confirmation email, then redirects back to https://findyourevents.au/?subscribed=1.
+// While NEWSLETTER_ACTION is empty, the box opens a pre-filled email to CONTACT_EMAIL instead.
+const NEWSLETTER_ACTION = "https://app.kit.com/forms/9982483/subscriptions";
+const NEWSLETTER_FIELD = "email_address";
+const NEWSLETTER_SECTOR_FIELD = "fields[sector]";   // Kit custom field "Sector": chosen sectors saved as one comma-separated value
 const CHANGELOG = [
   {date: "2026-09-29", note: "Removed the Creative & Media sector: Melbourne Marketing Forum moved to Business & Professional Services; removed Australia's UGC Creator Event (aimed at content creators rather than founders and professionals)."},
   {date: "2026-09-29", note: "Entrepreneurship search: added 5 (AI Startup Showcase & Networking (KSUG.AI); Deal Catch: Networking & Pitch; Deals & Partnerships for Startups (Stone & Chalk); Startup Stocktake founder workshop (CDH); Entrepreneur Exchange (Eastern Innovation)). Also added 7 from the ANZ Startup Events Calendar on Luma (Open Competition Pitch Night; Startups Coffee o'Clock & Coworking Day @ CDH; Startup Networking & Fireside Chat with Rye Smith; Founder Institute Melbourne networking; Learn to Vibe Code Your First App; AFC Campus website webinar; Accelerator Application Hacks with Sam Monkhouse). Removed 3: the HR & People sector and its AHRI webinars (Rethinking the entry-level role; AHRI Quarterly Work Outlook; AHRI webinar calendar)."},
@@ -740,11 +740,11 @@ document.querySelectorAll("form.signup").forEach(form=>form.addEventListener("su
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){note.textContent="Please enter a valid email address.";note.classList.add("err");inp.focus();return;}
   note.classList.remove("err");
   if(NEWSLETTER_ACTION){
-    const f=document.createElement("form");f.method="post";f.action=NEWSLETTER_ACTION;f.target="_blank";
-    const i=document.createElement("input");i.type="hidden";i.name=NEWSLETTER_FIELD;i.value=v;f.appendChild(i);
-    (chosenSectors(form).length?chosenSectors(form):["All sectors"]).forEach(k=>{const t=document.createElement("input");t.type="hidden";t.name=NEWSLETTER_SECTOR_FIELD;t.value=k;f.appendChild(t);});
-    document.body.appendChild(f);f.submit();f.remove();
-    inp.value="";note.textContent="Thanks! Check your inbox to confirm your subscription.";
+    const f=document.createElement("form");f.method="post";f.action=NEWSLETTER_ACTION;
+    const add=(n,val)=>{const i=document.createElement("input");i.type="hidden";i.name=n;i.value=val;f.appendChild(i);};
+    add(NEWSLETTER_FIELD,v);add(NEWSLETTER_SECTOR_FIELD,chosenSectors(form).join(", ")||"All sectors");
+    note.textContent="Signing you up…";
+    document.body.appendChild(f);f.submit();
   }else{
     location.href="mailto:"+CONTACT_EMAIL+"?subject="+encodeURIComponent("Send me the weekly list")+"&body="+encodeURIComponent("Please add "+v+" to the weekly Melbourne networking events list.\n\nSectors I want: "+(chosenSectors(form).join(", ")||"All sectors")+"\n");
     note.textContent="Your email app should open. Press Send to finish.";
@@ -758,6 +758,11 @@ document.querySelectorAll("form.signup").forEach(form=>form.addEventListener("su
   const cl=document.getElementById("contactLink");cl.href="mailto:"+CONTACT_EMAIL;cl.textContent=CONTACT_EMAIL;
   document.querySelectorAll(".suggestLink").forEach(a=>{if(SUGGEST_FORM_URL)a.href=SUGGEST_FORM_URL;else a.hidden=true;});
   buildSectorChips();
+  if(/[?&]subscribed=1/.test(location.search)){
+    document.querySelectorAll("form.signup .sunote").forEach(n=>n.textContent="You're nearly in! Check your inbox and click the link to confirm your subscription.");
+    const el=document.getElementById("toast");el.textContent="Nearly there: check your inbox to confirm your subscription";el.classList.add("on");setTimeout(()=>el.classList.remove("on"),6000);
+    history.replaceState(null,"",location.pathname+location.hash);
+  }
   const gs=document.getElementById("fGoal"); GOALS.forEach(([v,l])=>{if(live().some(e=>(e.goals||[]).includes(v)))gs.add(new Option(l,v));});
   const h=location.hash, gsec=h.match(/sector=([^&]+)/), ga=h.match(/area=([^&]+)/);
   if(/view=cal/.test(h)){view="cal";pickStartMonth();}
