@@ -274,6 +274,21 @@
   footer a{color:var(--tram-deep);font-weight:600}
   @media (max-width:820px){footer{display:block;padding:0 16px 36px}.fgrid{grid-template-columns:1fr;gap:18px}.why .sig{white-space:normal}}
 
+  /* weekly-email dialog */
+  dialog.subdlg{border:0;border-radius:14px;padding:0;max-width:500px;width:calc(100% - 32px);background:var(--tram);color:#fff;box-shadow:0 18px 50px rgba(0,0,0,.3);border-bottom:6px solid var(--signal);max-height:calc(100dvh - 32px);overflow:auto}
+  dialog.subdlg::backdrop{background:rgba(21,32,28,.55)}
+  .subdlg .sdin{padding:22px 24px 20px;position:relative}
+  .subdlg h2{font-family:var(--display);font-size:24px;font-weight:800;margin:0 36px 4px 0;line-height:1.15}
+  .subdlg .sdsub{margin:0 0 16px;color:var(--mist);font-size:15px}
+  .subdlg .signup{gap:10px}
+  .subdlg .sulbl{font-size:14px}
+  .subdlg .surow input{padding:11px 12px}
+  .subdlg .surow .btn{padding:11px 18px}
+  .subdlg .susec{margin-top:6px}
+  .subdlg .sdx{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#fff;font-size:20px;line-height:1}
+  .subdlg .sdx:hover{background:rgba(255,255,255,.22)}
+  .subdlg .sdpriv{margin:12px 0 0;font-size:12.5px;color:var(--mist)}
+  @media (max-width:520px){.subdlg .sdin{padding:18px 16px 16px}.subdlg .surow{flex-direction:column}.subdlg .surow .btn{width:100%}}
   /* suggest-an-event dialog */
   dialog.sg{border:0;border-radius:12px;padding:0;max-width:520px;width:calc(100% - 32px);background:var(--paper);color:var(--ink);box-shadow:0 18px 50px rgba(0,0,0,.25)}
   dialog.sg::backdrop{background:rgba(21,32,28,.55)}
@@ -388,6 +403,20 @@
   </div>
   </div>
 </footer>
+<dialog class="subdlg" id="subscribeDlg" aria-labelledby="sdTitle">
+  <div class="sdin">
+    <button class="sdx" type="button" id="sdClose" aria-label="Close">&times;</button>
+    <h2 id="sdTitle">Just your sector, every Monday</h2>
+    <p class="sdsub">One short email with new Melbourne networking events in the sectors you choose.</p>
+    <form class="signup" novalidate>
+      <label for="suEmail3" class="sulbl">Your email</label>
+      <div class="surow"><input id="suEmail3" name="email" type="email" required placeholder="you@example.com" autocomplete="email"><button class="btn" type="submit">Subscribe</button></div>
+      <fieldset class="susec"><legend>Your sectors</legend><div class="suchips"></div></fieldset>
+      <small class="sunote" role="status"></small>
+    </form>
+    <p class="sdpriv">Free. Unsubscribe anytime. Your email is only used for this list.</p>
+  </div>
+</dialog>
 <dialog class="sg" id="suggestDlg" aria-labelledby="sgTitle">
   <form id="suggestForm" novalidate>
     <h2 id="sgTitle">Suggest an event</h2>
@@ -761,8 +790,13 @@ document.getElementById("vList").onclick=()=>{view="list";render();};
 document.getElementById("vCal").onclick=()=>{view="cal";pickStartMonth();render();};
 document.getElementById("calPrev").onclick=()=>{calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()-1,1);calSel=null;renderCal();};
 document.getElementById("calNext").onclick=()=>{calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()+1,1);calSel=null;renderCal();};
-document.getElementById("goSubscribe").onclick=e=>{e.preventDefault();const sec=document.getElementById("subscribe");
-  sec.scrollIntoView({behavior:"smooth",block:"start"});document.getElementById("suEmail2").focus({preventScroll:true});};
+document.getElementById("goSubscribe").onclick=e=>{e.preventDefault();const dlg=document.getElementById("subscribeDlg");
+  if(!dlg.showModal){const sec=document.getElementById("subscribe");sec.scrollIntoView({behavior:"smooth",block:"start"});document.getElementById("suEmail2").focus({preventScroll:true});return;}
+  const form=dlg.querySelector("form.signup"),box=form.querySelector(".suchips");
+  if(!form.dataset.touched){box.querySelectorAll(".suchip").forEach(x=>x.setAttribute("aria-pressed",state.sector?x.dataset.sus===state.sector:!x.dataset.sus));}
+  dlg.showModal();document.getElementById("suEmail3").focus();};
+document.getElementById("sdClose").onclick=()=>document.getElementById("subscribeDlg").close();
+document.getElementById("subscribeDlg").addEventListener("click",ev=>{if(ev.target===ev.currentTarget)ev.currentTarget.close();});
 document.getElementById("copyView").onclick=()=>copy(viewUrl());
 document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value;render();});
 [["fGoal","goal"],["fType","type"]].forEach(([id,k])=>document.getElementById(id).onchange=e=>{state[k]=e.target.value;render();});
