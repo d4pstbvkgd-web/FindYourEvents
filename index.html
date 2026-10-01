@@ -615,7 +615,7 @@ const SIZE_LABEL={Small:"Small room",Medium:"Medium room",Large:"Large crowd",On
 function roomBand(e){
   if(!e.meet&&!(e.who||[]).length)return "";
   const chips=[...(e.who||[]).map(w=>`<span class="rchip who">${esc(w)}</span>`),
-    e.size?`<span class="rchip meta">${esc(SIZE_LABEL[e.size]||e.size)}</span>`:"",
+    e.size&&e.size!=="Online"?`<span class="rchip meta">${esc(SIZE_LABEL[e.size]||e.size)}</span>`:"",
     e.vibe?`<span class="rchip meta">${esc(e.vibe)}</span>`:""].join("");
   return `<div class="room"><div class="roomhd"><span class="ricon">${PEOPLE_ICON}</span><b>Who's in the room</b>${chips}</div>${e.meet?`<p class="roomtxt">${esc(e.meet)}</p>`:""}</div>`;
 }
