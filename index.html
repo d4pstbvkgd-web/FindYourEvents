@@ -81,6 +81,9 @@
   .searchrow input{flex:1;min-width:0}
   .moretoggle{flex:none;background:transparent;color:#fff;border:2px solid rgba(255,255,255,.6);border-radius:6px;padding:0 16px;font-weight:600;font-size:15px}
   .moretoggle:hover{border-color:#fff}
+  .moretoggle{display:inline-flex;align-items:center;gap:8px}
+  .moretoggle svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+  .moretoggle .fcount{display:inline-block;min-width:20px;padding:1px 6px;border-radius:999px;background:var(--signal);color:var(--ink);font-size:12.5px;font-weight:700;line-height:18px;text-align:center}
   .moretoggle[aria-expanded=true]{background:#fff;color:var(--ink);border-color:#fff}
   .morefilters{display:none;flex-direction:column;gap:10px}
   .morefilters.open{display:flex}
@@ -343,7 +346,7 @@
     <button class="filtertoggle" id="filterToggle" aria-expanded="false" aria-controls="filters">Filters</button>
     <div class="filters" id="filters">
       <div class="toolbar" role="group" aria-label="Filters">
-        <div class="searchrow"><input id="q" type="search" placeholder="Search name, organiser, venue, suburb or topic" aria-label="Search events"><button class="moretoggle" id="moreToggle" type="button" aria-expanded="false" aria-controls="moreFilters">More filters</button></div>
+        <div class="searchrow"><input id="q" type="search" placeholder="Search name, organiser, venue, suburb or topic" aria-label="Search events"><button class="moretoggle" id="moreToggle" type="button" aria-expanded="false" aria-controls="moreFilters">Filters</button></div>
         <div class="morefilters" id="moreFilters">
         <div class="filterline">
         <div class="selrow">
@@ -611,6 +614,7 @@ function renderSectors(){
   [...all].sort().forEach(k=>ul.appendChild(mk(k,k,counts[k]||0)));
 }
 const PEOPLE_ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><circle cx="16.5" cy="9" r="2.6"/><path d="M3.5 19c0-3.2 2.5-5.5 5.5-5.5s5.5 2.3 5.5 5.5"/><path d="M14.5 14.2c.6-.2 1.3-.3 2-.3 2.5 0 4.2 1.9 4.2 4.6"/></svg>';
+const FILTER_ICON='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>';
 const SIZE_LABEL={Small:"Small room",Medium:"Medium room",Large:"Large crowd",Online:"Online"};
 function roomBand(e){
   if(!e.meet&&!(e.who||[]).length)return "";
@@ -704,7 +708,7 @@ function syncControls(){
   document.querySelectorAll("[data-fmt]").forEach(b=>b.setAttribute("aria-pressed",state.format===b.dataset.fmt));
   document.querySelectorAll("[data-flag]").forEach(b=>b.setAttribute("aria-pressed",!!state[b.dataset.flag]));
   const nMore=[state.goal,state.type,state.slot,state.format,state.free,state.open,state.fav,state.win!=="all"].filter(Boolean).length;
-  document.getElementById("moreToggle").textContent=nMore?`More filters (${nMore})`:"More filters";
+  document.getElementById("moreToggle").innerHTML=FILTER_ICON+(nMore?`Filters <span class="fcount">${nMore}</span>`:"Filters");
   const n=live().filter(e=>favs.has(e.id)).length, ic=document.getElementById("icsAll");
   ic.hidden=!n; ic.textContent=`＋ Add ${n} saved event${n===1?"":"s"} to calendar`;
 }
