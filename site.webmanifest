@@ -1,6 +1,6 @@
 {
  "name": "Find Your Events",
- "short_name": "Find Events",
+ "short_name": "FindYourEvent",
  "start_url": "/",
  "display": "browser",
  "background_color": "#1E5A45",
