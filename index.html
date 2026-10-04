@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Find Your Events — Melbourne networking events sorted by sector</title>
-<meta name="description" content="Hand-picked Melbourne networking nights, workshops, masterclasses and webinars for founders, investors and professionals, sorted by sector, with a note on who you'll meet. Updated every Monday.">
+<meta name="description" content="Hand-picked Melbourne networking nights, workshops, masterclasses and webinars for founders, investors and professionals, sorted by sector, with a note on who you'll meet. Updated weekly.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="canonical" href="https://findyourevents.au/">
 <meta name="theme-color" content="#1E5A45">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://findyourevents.au/">
 <meta property="og:title" content="Find Your Events — Melbourne networking events sorted by sector">
-<meta property="og:description" content="Hand-picked networking nights, workshops and webinars for founders, investors and professionals, with a note on who you'll meet. Updated every Monday.">
+<meta property="og:description" content="Hand-picked networking nights, workshops and webinars for founders, investors and professionals, with a note on who you'll meet. Updated weekly.">
 <meta property="og:image" content="https://findyourevents.au/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -19,7 +19,7 @@
 <meta property="og:locale" content="en_AU">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Find Your Events — Melbourne networking events sorted by sector">
-<meta name="twitter:description" content="Hand-picked Melbourne networking events, sorted by sector, with a note on who you'll meet. Updated every Monday.">
+<meta name="twitter:description" content="Hand-picked Melbourne networking events, sorted by sector, with a note on who you'll meet. Updated weekly.">
 <meta name="twitter:image" content="https://findyourevents.au/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -171,7 +171,8 @@
   .meetline b{color:var(--tram-deep);font-weight:600}
   .ev.open p.meetline{display:block}
   .evrow{margin-top:7px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-  .morebtn{background:none;border:0;padding:3px 2px;margin-left:4px;font-size:13px;font-weight:600;color:var(--tram-deep);text-decoration:underline;text-underline-offset:2px}
+  .morebtn{background:#fff;border:1.5px solid var(--tram);border-radius:999px;padding:3px 12px;margin-left:4px;font-size:13px;font-weight:700;color:var(--tram-deep);line-height:1.4;white-space:nowrap}
+  .morebtn:hover,.morebtn[aria-expanded=true]{background:var(--tram);color:#fff}
   .ev.open{background:#FBFAF5}
   .ev:last-child{border-bottom:0}
   .ev.hl{background:#FFF7DC;margin:0 -8px;padding:14px 8px;border-radius:6px}
@@ -346,7 +347,7 @@
     <button class="filtertoggle" id="filterToggle" aria-expanded="false" aria-controls="filters">Filters</button>
     <div class="filters" id="filters">
       <div class="toolbar" role="group" aria-label="Filters">
-        <div class="searchrow"><input id="q" type="search" placeholder="Search name, organiser, venue, suburb or topic" aria-label="Search events"><button class="moretoggle" id="moreToggle" type="button" aria-expanded="false" aria-controls="moreFilters">Filters</button></div>
+        <div class="searchrow"><input id="q" type="search" placeholder="Search name, organiser, venue or topic" aria-label="Search events"><button class="moretoggle" id="moreToggle" type="button" aria-expanded="false" aria-controls="moreFilters">Filters</button></div>
         <div class="morefilters" id="moreFilters">
         <div class="filterline">
         <div class="selrow">
@@ -360,6 +361,7 @@
           <button class="chip" data-fmt="inperson" aria-pressed="false">In person</button>
           <button class="chip" data-fmt="online" aria-pressed="false">Online</button>
           <span class="sep" aria-hidden="true"></span>
+          <button class="chip" data-flag="recent" aria-pressed="false">Recently added</button>
           <button class="chip" data-flag="free" aria-pressed="false">Free</button>
           <button class="chip" data-flag="open" aria-pressed="false">Open to all</button>
           <button class="chip" data-flag="fav" aria-pressed="false">★ Saved</button>
@@ -407,7 +409,7 @@
 <footer class="wrap">
   <div class="finner">
   <section class="why" aria-labelledby="whyTitle">
-    <p><b id="whyTitle">Why I built this.</b> Melbourne's networking events are scattered across Eventbrite, Humanitix, Luma and organiser pages, and few say who'll be in the room. So I keep one independent list of events with real networking time, checked on each organiser's page every Monday. It doesn't cover every event in Melbourne, only ones with a networking component. I'll keep adding more as the list grows, so if you spot something missing, please <a class="suggestLink" href="#" target="_blank" rel="noopener">suggest an event</a>. <span class="sig">— Naz Mohebali · <a class="authorLink" href="https://www.linkedin.com/in/nazaninmohebali" target="_blank" rel="noopener">Connect on LinkedIn</a></span></p>
+    <p><b id="whyTitle">Why I built this.</b> Melbourne's networking events are scattered across Eventbrite, Humanitix, Luma and organiser pages, and few say who'll be in the room. So I keep one independent list of events with real networking time, checked on each organiser's page every Sunday. It doesn't cover every event in Melbourne, only ones with a networking component. I'll keep adding more as the list grows, so if you spot something missing, please <a class="suggestLink" href="#" target="_blank" rel="noopener">suggest an event</a>. <span class="sig">— Naz Mohebali · <a class="authorLink" href="https://www.linkedin.com/in/nazaninmohebali" target="_blank" rel="noopener">Connect on LinkedIn</a></span></p>
   </section>
   <div class="fgrid">
     <div><h2>Your privacy</h2><p>Your email is used only for the weekly list, and you can unsubscribe anytime.</p><p>Events you save with ★ are stored only in your own browser.</p></div>
@@ -433,7 +435,7 @@
   <form id="suggestForm" novalidate>
     <button class="sdx" type="button" id="sgX" aria-label="Close">&times;</button>
     <h2 id="sgTitle">Suggest an event</h2>
-    <p class="sgintro">Know a Melbourne event with real networking? Send it in and I'll check it for the next update.</p>
+    <p class="sgintro">Know a Melbourne event with real networking? Send it in and I'll check it for the next update. Thank you for helping make this list more complete for everyone.</p>
     <label><span class="lt">Event link</span><input type="url" name="event_link" required placeholder="https://…" autocomplete="off"></label>
     <label><span class="lt">Event name <span class="opt">(optional)</span></span><input type="text" name="event_name" maxlength="200"></label>
     <label><span class="lt">Sector <span class="opt">(optional)</span></span><select name="sector"><option value="">Not sure</option></select></label>
@@ -460,7 +462,7 @@ const SUGGEST_FORM_URL = "https://forms.gle/GpZarT28rLhoYpEB7";   // old Google 
 const SUGGEST_ACCESS_KEY = "dd2b311c-df0c-4b84-9256-794a781f87a7";   // Web3Forms key (hello@findyourevents.au): suggestions are emailed there
 const LAST_CHECKED = "2026-09-28";
 const FIRST_PUBLISHED = "2026-09-06";   // "New" badges only appear on events added after this date
-const INTRO = "Built and curated by Naz Mohebali · Updated every Monday";
+const INTRO = "Built and curated by Naz Mohebali · Updated every Sunday";
 const AUTHOR_NAME = "Naz Mohebali";   // this name in INTRO links to AUTHOR_URL
 const AUTHOR_URL = "https://www.linkedin.com/in/nazaninmohebali";
 const CONTACT_EMAIL = "hello@findyourevents.au";
@@ -567,11 +569,11 @@ const store={get(k){try{return localStorage.getItem(k);}catch(e){return mem[k]||
 let favs=new Set(); try{favs=new Set(JSON.parse(store.get("mel-favs")||"[]"));}catch(e){}
 
 // ---------- state ----------
-const state={sector:null,region:"",type:"",slot:"",goal:"",win:"all",format:"",free:false,open:false,fav:false,q:""};
+const state={sector:null,region:"",type:"",slot:"",goal:"",win:"all",format:"",free:false,open:false,fav:false,recent:false,q:""};
 let showAll=false, seriesOpen=false; const openCards=new Set(); const HORIZON_DAYS=14;
 const SHORT={"Startups & Investment":"Startups","Technology & AI":"Tech & AI","Business & Professional Services":"Business","Life Sciences & MedTech":"Life Sciences","Sustainability & Climate":"Climate","STEM & Research":"STEM","Creative & Media":"Creative"};
 let view="list", calMonth=new Date(today.getFullYear(),today.getMonth(),1), calSel=null, calPicked=false;
-const isNew=e=>e.added&&e.added>FIRST_PUBLISHED&&(today-parse(e.added))/864e5<=3;
+const isNew=e=>!!e.added&&e.added>FIRST_PUBLISHED&&e.added>=LAST_CHECKED;   // added in or since the last full update
 const isPublic=e=>!e.access||e.access==="Public";
 const live=()=>SEED.filter(e=>!isPast(e));
 
@@ -588,13 +590,14 @@ function matches(e,{ignoreSector=false}={}){
   if(state.free&&!/free/i.test(e.price))return false;
   if(state.open&&!isPublic(e))return false;
   if(state.fav&&!favs.has(e.id))return false;
+  if(state.recent&&!isNew(e))return false;
   if(q&&![e.name,e.org,e.venue,e.suburb,e.desc,e.sector,e.region,e.meet,(e.who||[]).join(" "),(e.topics||[]).join(" ")].join(" ").toLowerCase().includes(q))return false;
   return true;
 }
 const withDate=e=>({...e,_d:effectiveDate(e)});
 function dated(){return live().filter(e=>matches(e)&&effectiveDate(e)&&inWindow(e,state.win)).map(withDate).sort((a,b)=>a._d<b._d?-1:a._d>b._d?1:0);}
 function series(){return state.win!=="all"?[]:live().filter(e=>matches(e)&&!effectiveDate(e));}
-const anyFilter=()=>!!(state.region||state.type||state.slot||state.goal||state.format||state.free||state.open||state.fav||state.q||state.win!=="all");
+const anyFilter=()=>!!(state.region||state.type||state.slot||state.goal||state.format||state.free||state.open||state.fav||state.recent||state.q||state.win!=="all");
 
 // ---------- helpers ----------
 function fmt(d){const dt=parse(d);return {day:String(dt.getDate()).padStart(2,"0"),mon:dt.toLocaleString("en-AU",{month:"short"}),wk:dt.toLocaleString("en-AU",{weekday:"short"}),today:iso(dt)===iso(today)};}
@@ -637,11 +640,11 @@ function card(e){
       <div class="meta"><i>${esc(e.org)}</i> · ${esc(e.time)}${endTxt} · ${esc(where)}</div>
       ${roomBand(e)}
       <div class="evrow">
-        ${isNew(e)?`<span class="tag new">New</span>`:""}
+        ${isNew(e)?`<span class="tag new">Recently added</span>`:""}
         <span class="tag type">${esc(e.type)}</span>${state.sector?"":`<span class="tag">${esc(SHORT[e.sector]||e.sector)}</span>`}
         ${isPublic(e)?"":`<span class="tag lock">${esc(e.access)}</span>`}
         ${saved?`<span class="tag new">★ Saved</span>`:""}
-        <button class="morebtn" data-more="${e.id}" aria-expanded="${open}" aria-controls="more-${e.id}">${open?"Hide details":"Details"}</button>
+        <button class="morebtn" data-more="${e.id}" aria-expanded="${open}" aria-controls="more-${e.id}">${open?"Hide details −":"Details +"}</button>
       </div>
     </div>
     <div class="side">
@@ -658,8 +661,7 @@ function card(e){
       </div>
       <div class="mini">
         <button data-fav="${e.id}" aria-pressed="${saved}">${saved?"★ Saved":"☆ Save"}</button>
-        ${effectiveDate(e)?`<button data-ics="${e.id}">＋ Calendar</button>`:""}
-        <button data-share="${e.id}">Share</button>
+        <button data-share="${e.id}">Copy link</button>
       </div>
     </div>`;
   return a;
@@ -676,7 +678,7 @@ function renderList(){
     document.getElementById("clear").onclick=clearAll;ser.hidden=true;return;}
   if(!items.length){list.innerHTML=`<div class="empty">No dated events match. See the ongoing series below, or <button id="clear">clear filters</button>.</div>`;document.getElementById("clear").onclick=clearAll;}
   let shown=items;
-  if(!showAll&&state.win==="all"&&!state.q.trim()&&!state.fav){
+  if(!showAll&&state.win==="all"&&!state.q.trim()&&!state.fav&&!state.recent){
     const lim=new Date(today);lim.setDate(lim.getDate()+HORIZON_DAYS);const L=iso(lim);
     shown=items.filter(e=>e._d<=L); if(shown.length<6)shown=items.slice(0,Math.min(items.length,6));
   }
@@ -692,7 +694,7 @@ function renderList(){
   if(hiddenN>0){const last=fmt(items[items.length-1]._d);const b=document.createElement("button");b.className="showmore";
     b.textContent=`Show ${hiddenN} more event${hiddenN===1?"":"s"} (to ${last.day} ${last.mon}) ▾`;
     b.onclick=()=>{showAll=true;renderList();};list.appendChild(b);}
-  else if(showAll&&items.length>6&&state.win==="all"&&!state.q.trim()&&!state.fav){const b=document.createElement("button");b.className="showmore";
+  else if(showAll&&items.length>6&&state.win==="all"&&!state.q.trim()&&!state.fav&&!state.recent){const b=document.createElement("button");b.className="showmore";
     b.textContent="Show fewer ▴";b.onclick=()=>{showAll=false;renderList();document.getElementById("list").scrollIntoView({block:"start"});};list.appendChild(b);}
   ser.hidden=!sers.length;
   if(sers.length){
@@ -707,7 +709,7 @@ function syncControls(){
   document.querySelectorAll("[data-win]").forEach(b=>b.setAttribute("aria-pressed",state.win===b.dataset.win));
   document.querySelectorAll("[data-fmt]").forEach(b=>b.setAttribute("aria-pressed",state.format===b.dataset.fmt));
   document.querySelectorAll("[data-flag]").forEach(b=>b.setAttribute("aria-pressed",!!state[b.dataset.flag]));
-  const nMore=[state.goal,state.type,state.slot,state.format,state.free,state.open,state.fav,state.win!=="all"].filter(Boolean).length;
+  const nMore=[state.goal,state.type,state.slot,state.format,state.free,state.open,state.fav,state.recent,state.win!=="all"].filter(Boolean).length;
   document.getElementById("moreToggle").innerHTML=FILTER_ICON+(nMore?`Filters <span class="fcount">${nMore}</span>`:"Filters");
   const n=live().filter(e=>favs.has(e.id)).length, ic=document.getElementById("icsAll");
   ic.hidden=!n; ic.textContent=`＋ Add ${n} saved event${n===1?"":"s"} to calendar`;
@@ -771,7 +773,7 @@ function shareEvent(id){const e=SEED.find(x=>x.id===id);if(!e)return;
 function openSharedEvent(){const id=decodeURIComponent((location.hash.match(/event=([^&]+)/)||[])[1]||"");if(!id)return;
   const e=SEED.find(x=>x.id===id);
   if(!e||isPast(e)){toast("That event has finished or is no longer listed");return;}
-  Object.assign(state,{sector:null,region:"",type:"",slot:"",goal:"",win:"all",format:"",free:false,open:false,fav:false,q:""});view="list";renderList.scrolled=false;
+  Object.assign(state,{sector:null,region:"",type:"",slot:"",goal:"",win:"all",format:"",free:false,open:false,fav:false,recent:false,q:""});view="list";renderList.scrolled=false;
   openCards.add(id); if(effectiveDate(e))showAll=true; else seriesOpen=true;}
 function viewUrl(){const u=new URL(location.href);const p=[];if(state.sector)p.push("sector="+encodeURIComponent(state.sector));if(state.region)p.push("area="+encodeURIComponent(state.region));if(view==="cal")p.push("view=cal");u.hash=p.join("&");return u.toString();}
 const icsTxt=v=>String(v).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\n/g,"\\n");
@@ -788,7 +790,7 @@ document.addEventListener("click",ev=>{
   if(b.dataset.more){const id=b.dataset.more,art=document.getElementById("ev-"+id),m=document.getElementById("more-"+id);
     const on=!openCards.has(id); on?openCards.add(id):openCards.delete(id);
     document.querySelectorAll("#ev-"+CSS.escape(id)).forEach(x=>x.classList.toggle("open",on));
-    document.querySelectorAll("[data-more='"+id+"']").forEach(x=>{x.setAttribute("aria-expanded",on);x.textContent=on?"Hide details":"Details";});
+    document.querySelectorAll("[data-more='"+id+"']").forEach(x=>{x.setAttribute("aria-expanded",on);x.textContent=on?"Hide details −":"Details +";});
     document.querySelectorAll("#more-"+CSS.escape(id)).forEach(x=>x.hidden=!on);}
   if(b.dataset.win){state.win=state.win===b.dataset.win?"all":b.dataset.win;render();}
   if(b.dataset.fmt){state.format=state.format===b.dataset.fmt?"":b.dataset.fmt;render();}
@@ -817,7 +819,7 @@ document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value
 document.getElementById("moreToggle").onclick=e=>{const m=document.getElementById("moreFilters");m.classList.toggle("open");e.currentTarget.setAttribute("aria-expanded",m.classList.contains("open"));};
 document.getElementById("clearF").onclick=clearAll;
 document.getElementById("filterToggle").onclick=e=>{const f=document.getElementById("filters");f.classList.toggle("open");e.currentTarget.setAttribute("aria-expanded",f.classList.contains("open"));};
-function clearAll(){showAll=false;Object.assign(state,{sector:null,region:"",type:"",slot:"",goal:"",win:"all",format:"",free:false,open:false,fav:false,q:""});
+function clearAll(){showAll=false;Object.assign(state,{sector:null,region:"",type:"",slot:"",goal:"",win:"all",format:"",free:false,open:false,fav:false,recent:false,q:""});
   document.getElementById("q").value="";["fGoal","fType"].forEach(i=>document.getElementById(i).value="");render();}
 
 // weekly-email sign-up (header and bottom forms)
