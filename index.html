@@ -416,7 +416,7 @@
     <p><b id="whyTitle">Why I built this.</b> Melbourne's networking events are scattered across Eventbrite, Humanitix, Luma and organiser pages, and few say who'll be in the room. So I keep one independent list of events with real networking time, checked on each organiser's page every Sunday. It doesn't cover every event in Melbourne, only ones with a networking component. I'll keep adding more as the list grows, so if you spot something missing, please <a class="suggestLink" href="#" target="_blank" rel="noopener">suggest an event</a>. <span class="sig">— Naz Mohebali · <a class="authorLink" href="https://www.linkedin.com/in/nazaninmohebali" target="_blank" rel="noopener">Connect on LinkedIn</a></span></p>
   </section>
   <div class="fgrid">
-    <div><h2>Your privacy</h2><p>Your email is used only for the weekly list, and you can unsubscribe anytime.</p><p>Events you save with ★ are stored only in your own browser.</p></div>
+    <div><h2>Your privacy</h2><p>Your email is used only for the weekly list, and you can unsubscribe anytime.</p><p>Events you save with ★ are stored only in your own browser.</p><p>The site counts visits and clicks anonymously, without cookies, to see which features are useful.</p></div>
     <div><h2>Contact</h2><p><a id="contactLink" href="#"></a></p><p><a class="suggestLink" href="#" target="_blank" rel="noopener">Suggest an event →</a></p></div>
   </div>
   </div>
@@ -871,7 +871,7 @@ document.querySelectorAll("form.signup").forEach(form=>form.addEventListener("su
     const add=(n,val)=>{const i=document.createElement("input");i.type="hidden";i.name=n;i.value=val;f.appendChild(i);};
     add(NEWSLETTER_FIELD,v);add(NEWSLETTER_SECTOR_FIELD,chosenSectors(form).join(", ")||"All sectors");
     note.textContent="Signing you up…";
-    document.body.appendChild(f);f.submit();
+    document.body.appendChild(f);track("email-signup","Weekly email: signed up ("+(chosenSectors(form).join(", ")||"All sectors")+")");setTimeout(()=>f.submit(),300);
   }else{
     location.href="mailto:"+CONTACT_EMAIL+"?subject="+encodeURIComponent("Send me the weekly list")+"&body="+encodeURIComponent("Please add "+v+" to the weekly Melbourne networking events list.\n\nSectors I want: "+(chosenSectors(form).join(", ")||"All sectors")+"\n");
     note.textContent="Your email app should open. Press Send to finish.";
@@ -904,7 +904,7 @@ function setupSuggest(){
     try{
       const res=await fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(data)});
       const j=await res.json().catch(()=>({}));
-      if(res.ok&&j.success!==false){form.reset();form.hidden=true;done.hidden=false;note.textContent="";}
+      if(res.ok&&j.success!==false){form.reset();form.hidden=true;done.hidden=false;note.textContent="";track("suggest-sent","Suggest an event: sent");}
       else throw new Error(j.message||"failed");
     }catch(e){note.classList.add("err");note.innerHTML='Sorry, that didn\'t send. Please try again, or email <a href="mailto:'+esc(CONTACT_EMAIL)+'">'+esc(CONTACT_EMAIL)+'</a>.';}
     btn.disabled=false;
@@ -933,5 +933,35 @@ function setupSuggest(){
   window.addEventListener("hashchange",()=>{if(/event=/.test(location.hash)){openSharedEvent();render();}});
 })();
 </script>
+<script>
+/* Anonymous visit and click counting (GoatCounter, no cookies). */
+function track(path,title){try{if(window.goatcounter&&window.goatcounter.count)window.goatcounter.count({path:path,title:title||path,event:true});}catch(e){}}
+(function(){
+  const evName=id=>{const e=(typeof SEED!=="undefined"?SEED:[]).find(x=>x.id===id);return e?e.name:id;};
+  const on=b=>b.getAttribute("aria-pressed")==="true";
+  document.addEventListener("click",ev=>{
+    const t=ev.target, a=t.closest("a"), b=t.closest("button");
+    if(a){
+      if(a.classList.contains("reg")){const art=a.closest("[id^='ev-']");const n=art?evName(art.id.slice(3)):a.href;track("register: "+n,"Register click: "+n);}
+      else if(a.classList.contains("suggestLink"))track("suggest-open","Suggest an event: opened");
+      else if(a.id==="goSubscribe")track("email-open","Weekly email: pop-up opened");
+      return;
+    }
+    if(!b)return;
+    if(b.closest("#sectors")){if(!on(b))track("sector: "+(b.title||"All sectors"),"Sector tab: "+(b.title||"All sectors"));}
+    else if(b.dataset.win||b.dataset.fmt||b.dataset.flag){if(!on(b)){const l=b.textContent.replace("★","").trim();track("filter: "+l,"Filter: "+l);}}
+    else if(b.dataset.more){if(b.getAttribute("aria-expanded")!=="true"){const n=evName(b.dataset.more);track("details: "+n,"Details opened: "+n);}}
+    else if(b.dataset.fav){if(!on(b)){const n=evName(b.dataset.fav);track("save: "+n,"Saved: "+n);}}
+    else if(b.dataset.share){const n=evName(b.dataset.share);track("copy-link: "+n,"Copy link: "+n);}
+    else if(b.id==="copyView")track("copy-view-link","Copy link to this view");
+    else if(b.id==="vCal")track("view-calendar","Calendar view opened");
+    else if(b.id==="moreToggle"||b.id==="filterToggle"){if(b.getAttribute("aria-expanded")!=="true")track("filters-open","Filters panel opened");}
+  },true);
+  [["fGoal","goal"],["fType","type"]].forEach(([id,k])=>{const s=document.getElementById(id);if(s)s.addEventListener("change",()=>{if(s.value)track("filter-"+k+": "+s.value,"Filter ("+k+"): "+s.value);});});
+  const q=document.getElementById("q");let searched=false;
+  if(q)q.addEventListener("input",()=>{if(!searched&&q.value.trim().length>=3){searched=true;track("search-used","Search box used");}});
+})();
+</script>
+<script data-goatcounter="https://findyourevents.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>
