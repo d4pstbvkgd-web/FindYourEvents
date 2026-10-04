@@ -132,6 +132,7 @@
   nav.tabs li button span{font-size:12px;font-weight:600;color:var(--stone);background:var(--tint);border-radius:999px;padding:1px 7px}
   nav.tabs li button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
   nav.tabs li button[aria-pressed=true] span{background:rgba(255,255,255,.18);color:#fff}
+  nav.tabs li:not(:first-child) button[aria-pressed=true]::before{content:"✓";font-size:12px;margin-right:-2px}
   @media (max-width:820px){
     main.wrap{padding:0 16px 32px}
     nav.tabs{margin:0 -16px 12px;padding:10px 16px 8px}
@@ -595,7 +596,7 @@ const store={get(k){try{return localStorage.getItem(k);}catch(e){return mem[k]||
 let favs=new Set(); try{favs=new Set(JSON.parse(store.get("mel-favs")||"[]"));}catch(e){}
 
 // ---------- state ----------
-const state={sector:null,region:"",type:"",slot:"",goal:"",win:"all",format:"",free:false,open:false,fav:false,recent:false,q:""};
+const state={sectors:[],region:"",type:"",slot:"",goal:"",win:"all",format:"",free:false,open:false,fav:false,recent:false,q:""};
 let showAll=false, seriesOpen=false; const openCards=new Set(); const HORIZON_DAYS=14;
 const SHORT={"Startups & Investment":"Startups","Technology & AI":"Tech & AI","Business & Professional Services":"Business","Life Sciences & MedTech":"Life Sciences","Sustainability & Climate":"Climate","STEM & Research":"STEM","Creative & Media":"Creative"};
 let view="list", calMonth=new Date(today.getFullYear(),today.getMonth(),1), calSel=null, calPicked=false;
@@ -606,7 +607,7 @@ const live=()=>SEED.filter(e=>!isPast(e));
 // every filter except sector and the date window
 function matches(e,{ignoreSector=false}={}){
   const q=state.q.trim().toLowerCase();
-  if(!ignoreSector&&state.sector&&e.sector!==state.sector)return false;
+  if(!ignoreSector&&state.sectors.length&&!state.sectors.includes(e.sector))return false;
   if(state.region&&e.region!==state.region)return false;
   if(state.type&&e.type!==state.type)return false;
   if(state.slot&&e.slot!==state.slot)return false;
@@ -637,8 +638,8 @@ function renderSectors(){
   const all=new Set(live().map(e=>e.sector));
   const ul=document.getElementById("sectors"); ul.innerHTML="";
   const mk=(label,val,n)=>{const li=document.createElement("li");const b=document.createElement("button");
-    b.setAttribute("aria-pressed",state.sector===val);b.title=val||"All sectors";b.innerHTML=`${esc(SHORT[label]||label)}<span>${n}</span>`;
-    b.onclick=()=>{state.sector=val;render();};li.appendChild(b);return li;};
+    b.setAttribute("aria-pressed",val?state.sectors.includes(val):!state.sectors.length);b.title=val||"All sectors";b.innerHTML=`${esc(SHORT[label]||label)}<span>${n}</span>`;
+    b.onclick=()=>{if(!val)state.sectors=[];else if(state.sectors.includes(val))state.sectors=state.sectors.filter(x=>x!==val);else state.sectors=[...state.sectors,val];render();};li.appendChild(b);return li;};
   ul.appendChild(mk("All",null,pool.length));
   [...all].sort().forEach(k=>ul.appendChild(mk(k,k,counts[k]||0)));
 }
@@ -667,7 +668,7 @@ function card(e){
       ${roomBand(e)}
       <div class="evrow">
         ${isNew(e)?`<span class="tag new">Recently added</span>`:""}
-        <span class="tag type">${esc(e.type)}</span>${state.sector?"":`<span class="tag">${esc(SHORT[e.sector]||e.sector)}</span>`}
+        <span class="tag type">${esc(e.type)}</span>${state.sectors.length===1?"":`<span class="tag">${esc(SHORT[e.sector]||e.sector)}</span>`}
         ${isPublic(e)?"":`<span class="tag lock">${esc(e.access)}</span>`}
         <button class="savebtn" data-fav="${e.id}" aria-pressed="${saved}" title="${saved?"Remove from your saved list":"Save this event"}">${saved?"★ Saved":"☆ Save"}</button>
         <button class="morebtn" data-more="${e.id}" aria-expanded="${open}" aria-controls="more-${e.id}">${open?"Hide details −":"Details +"}</button>
@@ -696,7 +697,7 @@ function renderList(){
   list.innerHTML=""; ser.innerHTML="";
   const items=dated(), sers=series();
   const win=state.win==="week"?" in the next 7 days":state.win==="month"?" in the next 30 days":"";
-  const ctx=[state.sector,state.region].filter(Boolean).join(" · ");
+  const ctx=[state.sectors.map(x=>SHORT[x]||x).join(" + "),state.region].filter(Boolean).join(" · ");
   document.getElementById("count").innerHTML=`<b>${items.length}</b> upcoming event${items.length===1?"":"s"}${win}`+(sers.length&&view==="list"?` · <b>${sers.length}</b> ongoing series below`:"")+(ctx?` · ${esc(ctx)}`:"");
   document.getElementById("clearF").hidden=!anyFilter();
   if(!items.length&&!sers.length){list.innerHTML=`<div class="empty">Nothing matches these filters. <button id="clear">Clear filters</button> or <a class="suggestLink" href="#suggest">suggest an event</a>.</div>`;
@@ -796,9 +797,9 @@ function shareEvent(id){const e=SEED.find(x=>x.id===id);if(!e)return;
 function openSharedEvent(){const id=decodeURIComponent((location.hash.match(/event=([^&]+)/)||[])[1]||"");if(!id)return;
   const e=SEED.find(x=>x.id===id);
   if(!e||isPast(e)){toast("That event has finished or is no longer listed");return;}
-  Object.assign(state,{sector:null,region:"",type:"",slot:"",goal:"",win:"all",format:"",free:false,open:false,fav:false,recent:false,q:""});view="list";renderList.scrolled=false;
+  Object.assign(state,{sectors:[],region:"",type:"",slot:"",goal:"",win:"all",format:"",free:false,open:false,fav:false,recent:false,q:""});view="list";renderList.scrolled=false;
   openCards.add(id); if(effectiveDate(e))showAll=true; else seriesOpen=true;}
-function viewUrl(){const u=new URL(location.href);const p=[];if(state.sector)p.push("sector="+encodeURIComponent(state.sector));if(state.region)p.push("area="+encodeURIComponent(state.region));if(view==="cal")p.push("view=cal");u.hash=p.join("&");return u.toString();}
+function viewUrl(){const u=new URL(location.href);const p=[];if(state.sectors.length)p.push("sector="+encodeURIComponent(state.sectors.join("|")));if(state.region)p.push("area="+encodeURIComponent(state.region));if(view==="cal")p.push("view=cal");u.hash=p.join("&");return u.toString();}
 const icsTxt=v=>String(v).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\n/g,"\\n");
 function vevent(e){const d=effectiveDate(e),s0=d.replace(/-/g,""),endD=parse(e.end&&!e.rule?e.end:d);endD.setDate(endD.getDate()+1);
   return ["BEGIN:VEVENT",`UID:${e.id}-${s0}@melbourne-sector-events`,`DTSTAMP:${s0}T000000Z`,`DTSTART;VALUE=DATE:${s0}`,`DTEND;VALUE=DATE:${iso(endD).replace(/-/g,"")}`,`SUMMARY:${icsTxt(e.name)}`,`LOCATION:${icsTxt(e.venue)}`,`DESCRIPTION:${icsTxt(e.time+" — "+e.desc+" Register: "+e.url)}`,`URL:${e.url}`,"END:VEVENT"].join("\r\n");}
@@ -826,7 +827,7 @@ document.getElementById("calNext").onclick=()=>{calMonth=new Date(calMonth.getFu
 document.getElementById("goSubscribe").onclick=e=>{e.preventDefault();const dlg=document.getElementById("subscribeDlg");
   if(!dlg.showModal){const sec=document.getElementById("subscribe");sec.scrollIntoView({behavior:"smooth",block:"start"});document.getElementById("suEmail2").focus({preventScroll:true});return;}
   const form=dlg.querySelector("form.signup"),box=form.querySelector(".suchips");
-  if(!form.dataset.touched){box.querySelectorAll(".suchip").forEach(x=>x.setAttribute("aria-pressed",state.sector?x.dataset.sus===state.sector:!x.dataset.sus));}
+  if(!form.dataset.touched){box.querySelectorAll(".suchip").forEach(x=>x.setAttribute("aria-pressed",state.sectors.length?state.sectors.includes(x.dataset.sus):!x.dataset.sus));}
   dlg.showModal();document.getElementById("suEmail3").focus();};
 document.getElementById("sdClose").onclick=()=>document.getElementById("subscribeDlg").close();
 document.getElementById("subscribeDlg").addEventListener("click",ev=>{if(ev.target===ev.currentTarget)ev.currentTarget.close();});
@@ -836,7 +837,7 @@ document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value
 document.getElementById("moreToggle").onclick=e=>{const m=document.getElementById("moreFilters");m.classList.toggle("open");e.currentTarget.setAttribute("aria-expanded",m.classList.contains("open"));};
 document.getElementById("clearF").onclick=clearAll;
 document.getElementById("filterToggle").onclick=e=>{const f=document.getElementById("filters");f.classList.toggle("open");e.currentTarget.setAttribute("aria-expanded",f.classList.contains("open"));};
-function clearAll(){showAll=false;Object.assign(state,{sector:null,region:"",type:"",slot:"",goal:"",win:"all",format:"",free:false,open:false,fav:false,recent:false,q:""});
+function clearAll(){showAll=false;Object.assign(state,{sectors:[],region:"",type:"",slot:"",goal:"",win:"all",format:"",free:false,open:false,fav:false,recent:false,q:""});
   document.getElementById("q").value="";["fGoal","fType"].forEach(i=>document.getElementById(i).value="");render();}
 
 // weekly-email sign-up (header and bottom forms)
@@ -855,7 +856,7 @@ function buildSectorChips(){
     const fs=form.querySelector(".susec");
     form.addEventListener("focusin",()=>{
       if(fs.hidden){fs.hidden=false;}
-      if(!form.dataset.touched&&state.sector){box.querySelectorAll(".suchip").forEach(x=>x.setAttribute("aria-pressed",x.dataset.sus===state.sector));}
+      if(!form.dataset.touched&&state.sectors.length){box.querySelectorAll(".suchip").forEach(x=>x.setAttribute("aria-pressed",state.sectors.includes(x.dataset.sus)));}
     });
   });
 }
@@ -925,7 +926,7 @@ function setupSuggest(){
   const gs=document.getElementById("fGoal"); GOALS.forEach(([v,l])=>{if(live().some(e=>(e.goals||[]).includes(v)))gs.add(new Option(l,v));});
   const h=location.hash, gsec=h.match(/sector=([^&]+)/), ga=h.match(/area=([^&]+)/);
   if(/view=cal/.test(h)){view="cal";pickStartMonth();}
-  if(gsec)state.sector=decodeURIComponent(gsec[1]);
+  if(gsec)state.sectors=decodeURIComponent(gsec[1]).split("|").filter(Boolean);
   if(ga)state.region=decodeURIComponent(ga[1]);
   openSharedEvent();
   render();
